@@ -87,12 +87,12 @@ export const CandidateCard: React.FC<Props> = ({ candidate, onNameClick }) => {
                         {candidate.availability_status}
                       </span>
                       {candidate.availability_status === "Not Requested" && (
-                        <button
-                          className="ml-2 text-[#207868] hover:underline"
-                          onClick={() => alert("Send request clicked")}
+                        <a
+                          href="#"
+                          className="text-[#207868] hover:underline border-r pr-4 border-gray-200 cursor-pointer"
                         >
                           Request availability
-                        </button>
+                        </a>
                       )}
                     </div>
                   ) : (
