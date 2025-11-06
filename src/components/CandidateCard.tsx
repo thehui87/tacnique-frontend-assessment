@@ -89,7 +89,7 @@ export const CandidateCard: React.FC<Props> = ({ candidate, onNameClick }) => {
                       {candidate.availability_status === "Not Requested" && (
                         <a
                           href="#"
-                          className="text-[#207868] hover:underline border-r pr-4 border-gray-200 cursor-pointer"
+                          className="text-[#207868] hover:underline pr-4 border-gray-200 cursor-pointer"
                         >
                           Request availability
                         </a>
@@ -106,7 +106,7 @@ export const CandidateCard: React.FC<Props> = ({ candidate, onNameClick }) => {
               ) : (
                 <a
                   href="#"
-                  className="text-[#207868] hover:underline border-r pr-4 border-gray-200 cursor-pointer"
+                  className="text-[#207868] hover:underline pr-4 border-gray-200 cursor-pointer"
                 >
                   Request Availability
                 </a>
