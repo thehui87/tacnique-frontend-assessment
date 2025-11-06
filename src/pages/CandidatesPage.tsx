@@ -99,13 +99,22 @@ export const CandidatesPage: React.FC<CandidatesPageProps> = ({ search, fullText
 
         {/* Action Buttons */}
         <div className="flex justify-end items-center gap-2 order-1 md:order-2">
-          <button className="flex items-center gap-1.5 border border-[#207868] text-[#207868] bg-white rounded-md px-4 py-2 text-sm font-medium hover:bg-[#f8faf9] transition">
+          <button
+            className="flex items-center gap-1.5 border border-[#207868] text-[#207868] bg-white rounded-md px-4 py-2 text-sm font-medium hover:bg-gray-200 hover:shadow-md transition h-[38px] cursor-pointer"
+            onClick={() => alert("Generate Report clicked")}
+          >
             Generate Report
           </button>
-          <button className="flex items-center gap-1.5 border border-[#207868] text-[#207868] bg-white rounded-md px-4 py-2 text-sm font-medium hover:bg-[#f8faf9] transition">
+          <button
+            className="flex items-center gap-1.5 border border-[#207868] text-[#207868] bg-white rounded-md px-4 py-2 text-sm font-medium hover:bg-gray-200 hover:shadow-md transition h-[38px] cursor-pointer"
+            onClick={() => alert("Add Candidate clicked")}
+          >
             <span className="text-base font-bold">+</span> Add Candidate
           </button>
-          <button className="border border-[#207868] text-[#207868] bg-white rounded-md px-4 py-2 text-sm font-medium hover:bg-[#f8faf9] transition">
+          <button
+            className="flex items-center gap-1.5 border border-[#207868] text-[#207868] bg-white rounded-md px-4 py-2 text-sm font-medium hover:bg-gray-200 hover:shadow-md transition h-[38px] cursor-pointer"
+            onClick={() => alert("Bulk Actions clicked")}
+          >
             Bulk Actions
           </button>
         </div>
