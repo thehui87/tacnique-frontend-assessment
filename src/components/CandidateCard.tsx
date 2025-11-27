@@ -3,7 +3,7 @@ import type { Candidate } from "../types/candidate";
 
 type Props = {
   candidate: Candidate;
-  onNameClick?: (id: number) => void;
+  onNameClick?: (id: string) => void;
 };
 
 export const CandidateCard: React.FC<Props> = ({ candidate, onNameClick }) => {

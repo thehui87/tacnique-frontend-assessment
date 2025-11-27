@@ -1,24 +1,41 @@
 // Sidebar.tsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { SearchInput } from "./SearchInput";
 import { CollapsibleSection } from "./CollapsibleSection";
+import { CustomSelect } from "./CustomSelect";
 
-const titles = [
-  "Application Type",
-  "Jobs",
-  "CRM",
-  "Profile Details",
-  "Source",
-  "Responsibility",
-  "Pipeline Tasks",
-  "Education",
-];
+const titles = ["Jobs", "CRM", "Profile Details", "Responsibility", "Pipeline Tasks", "Education"];
+
+// // Sort options
+// const sortOptions = [
+//   {
+//     value: "last_activity_desc",
+//     label: "Last Activity (new to old)",
+//     sortBy: "last_activity",
+//     sortOrder: "desc",
+//   },
+//   {
+//     value: "last_activity_asc",
+//     label: "Last Activity (old to new)",
+//     sortBy: "last_activity",
+//     sortOrder: "asc",
+//   },
+//   { value: "name_asc", label: "Name (A to Z)", sortBy: "name", sortOrder: "asc" },
+//   { value: "name_desc", label: "Name (Z to A)", sortBy: "name", sortOrder: "desc" },
+// ];
 
 interface SidebarProps {
   searchValue: string;
   onSearchChange: (value: string) => void;
   fullTextSearch: boolean;
   onFullTextToggle: (value: boolean) => void;
+  applicationTypeFilters: string[];
+  onApplicationTypeChange: (values: string[]) => void;
+  sourceFilters: string[];
+  onSourceChange: (values: string[]) => void;
+  sortValue: string;
+  sortOptions: { label: string; value: string; sortBy: string; sortOrder: string }[];
+  onSortChange: (value: string) => void;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
@@ -26,8 +43,67 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onSearchChange,
   fullTextSearch,
   onFullTextToggle,
+  applicationTypeFilters,
+  onApplicationTypeChange,
+  sourceFilters,
+  onSourceChange,
+  sortValue,
+  sortOptions,
+  onSortChange,
 }) => {
-  const [open, setOpen] = useState(false);
+  // const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [applicationTypeData, setApplicationTypeData] = useState<string[]>([]);
+  const [sourceData, setSourceData] = useState<string[]>([]);
+  // const [error, setError] = useState<string>("");
+  // const sortOptions = [
+  //   {
+  //     label: "Last Activity (new to old)",
+  //     value: "new_to_old",
+  //     sortBy: "last_activity",
+  //     sortOrder: "desc",
+  //   },
+  //   {
+  //     label: "Last Activity (old to new)",
+  //     value: "old_to_new",
+  //     sortBy: "last_activity",
+  //     sortOrder: "desc",
+  //   },
+  // ];
+  // const [sort, setSort] = useState("new_to_old");
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      await fetch(`http://0.0.0.0:8000/api/sources`)
+        .then(res => res.json())
+        .then(data => {
+          // console.log("data", data.sources);
+          setSourceData(data.sources);
+        })
+        .catch(err => {
+          console.error(err);
+          // setError("Failed to load candidates");
+        })
+        .finally(() => setLoading(false));
+
+      setLoading(true);
+
+      await fetch(`http://0.0.0.0:8000/api/application_type`)
+        .then(res => res.json())
+        .then(data => {
+          // console.log("data", data.application_type);
+          setApplicationTypeData(data.application_type);
+        })
+        .catch(err => {
+          console.error(err);
+          // setError("Failed to load candidates");
+        })
+        .finally(() => setLoading(false));
+    };
+    fetchData();
+  }, []);
+
   return (
     <aside className="w-[248px] bg-[#f7f8f7] min-h-screen px-6 py-6">
       {/* Search Input */}
@@ -65,58 +141,73 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </p>
       </div>
       {/* Sort Dropdown */}
-      <div className="mt-4 relative w-auto">
-        {/* Dropdown Header */}
-        <div
-          className="w-full px-3 py-2 flex items-center justify-between border border-[#e1e1e1] bg-white rounded text-[14px] text-[#333333] cursor-pointer"
-          onClick={() => setOpen(!open)}
-        >
-          <span className="truncate">Last Activity (new to old)</span>
-          <svg
-            className={`w-3.5 h-3.5 text-[#909090] shrink-0 transition-transform duration-200 ${
-              open ? "rotate-180" : ""
-            }`}
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-          </svg>
-        </div>
-
-        {/* Dropdown Menu */}
-        {open && (
-          <div className="absolute mt-1 w-full bg-white border border-[#e1e1e1] rounded shadow-md z-10">
-            <div className="py-2 text-[14px] text-[#333333] cursor-pointer hover:bg-gray-100 px-3">
-              Option 1
-            </div>
-            <div className="py-2 text-[14px] text-[#333333] cursor-pointer hover:bg-gray-100 px-3">
-              Option 2
-            </div>
-            <div className="py-2 text-[14px] text-[#333333] cursor-pointer hover:bg-gray-100 px-3">
-              Option 3
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Collapsible Filter Sections */}
-      <div className="mt-6">
-        {titles.map(t => (
-          <CollapsibleSection key={t} title={t}>
+      <CustomSelect
+        options={sortOptions.map(o => ({ label: o.label, value: o.value }))}
+        value={sortValue}
+        onChange={onSortChange}
+      />
+      {loading ? (
+        <div>Loading...</div>
+      ) : (
+        <div className="mt-6">
+          <CollapsibleSection title="Application Type">
             <div className="pt-1">
-              <label className="flex items-center gap-2 text-sm text-gray-600">
-                <input type="checkbox" />
-                <span>Example option</span>
-              </label>
-              <label className="flex items-center gap-2 text-sm text-gray-600 mt-2">
-                <input type="checkbox" />
-                <span>Example option</span>
-              </label>
+              {applicationTypeData.map(t => (
+                <label key={t} className="flex items-center gap-2 text-sm text-gray-600">
+                  <input
+                    type="checkbox"
+                    checked={applicationTypeFilters?.includes(t) || false}
+                    onChange={e => {
+                      const newFilters = e.target.checked
+                        ? [...applicationTypeFilters, t] // add if checked
+                        : applicationTypeFilters.filter(f => f !== t); // remove if unchecked
+                      onApplicationTypeChange(newFilters);
+                    }}
+                  />
+                  <span>{t}</span>
+                </label>
+              ))}
             </div>
           </CollapsibleSection>
-        ))}
-      </div>
+
+          <CollapsibleSection title="Sources">
+            <div className="pt-1">
+              {sourceData.map(t => (
+                <label key={t} className="flex items-center gap-2 text-sm text-gray-600">
+                  <input
+                    type="checkbox"
+                    checked={sourceFilters?.includes(t) || false}
+                    onChange={e => {
+                      const newFilters = e.target.checked
+                        ? [...sourceFilters, t] // add if checked
+                        : sourceFilters.filter(f => f !== t); // remove if unchecked
+                      onSourceChange(newFilters);
+                    }}
+                  />
+                  <span>{t}</span>
+                </label>
+              ))}
+            </div>
+          </CollapsibleSection>
+
+          {/* Collapsible Filter Sections */}
+
+          {titles.map(t => (
+            <CollapsibleSection key={t} title={t}>
+              <div className="pt-1">
+                <label className="flex items-center gap-2 text-sm text-gray-600">
+                  <input type="checkbox" />
+                  <span>Example option</span>
+                </label>
+                <label className="flex items-center gap-2 text-sm text-gray-600 mt-2">
+                  <input type="checkbox" />
+                  <span>Example option</span>
+                </label>
+              </div>
+            </CollapsibleSection>
+          ))}
+        </div>
+      )}
       {/* Reset Filters */}
       <button className="mt-6 w-full px-4 py-2 text-[#3574d6] text-[13.9px] font-light flex items-center justify-center gap-2 hover:underline">
         <svg

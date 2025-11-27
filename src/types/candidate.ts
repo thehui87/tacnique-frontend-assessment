@@ -4,13 +4,13 @@ export interface Interview {
 }
 
 export interface Candidate {
-  id: number;
+  id: string;
   name: string;
-  position: string;
-  company: string;
-  job_title: string;
+  position?: string;
+  company?: string;
+  job_title?: string;
   job_id: string;
-  status: string;
+  status?: string;
   status_type: "stage" | "role";
   last_activity: string;
   action_link: string;

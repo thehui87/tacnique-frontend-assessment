@@ -1,5 +1,3 @@
-import { useState, useEffect } from "react";
-
 interface SearchInputProps {
   value: string;
   onChange: (value: string) => void;
@@ -11,19 +9,7 @@ export const SearchInput: React.FC<SearchInputProps> = ({
   value,
   onChange,
   placeholder = "Search candidates",
-  debounceMs = 300,
 }) => {
-  const [localValue, setLocalValue] = useState(value);
-
-  // Debounce the onChange callback
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      onChange(localValue);
-    }, debounceMs);
-
-    return () => clearTimeout(timer);
-  }, [localValue, debounceMs, onChange]);
-
   return (
     <div className="relative flex items-center grow bg-white border border-[#E4E7E5] rounded-xs w-full">
       <div className="absolute left-2 top-1/2 -translate-y-1/2">
@@ -43,8 +29,8 @@ export const SearchInput: React.FC<SearchInputProps> = ({
         type="text"
         className="pl-7 pr-1 py-1 text-md w-full outline-none text-[#15372C]"
         placeholder={placeholder}
-        value={localValue}
-        onChange={e => setLocalValue(e.target.value)}
+        value={value}
+        onChange={e => onChange(e.target.value)}
       />
     </div>
   );
